@@ -16,13 +16,13 @@ TICKERS = [
 ]
 
 TARGET_PRICES = [
-    50.00,   # Aperam target
-    20.00,   # Signify target
-    18.00,   # Philips target
-    1.50,    # PostNL target
-    4.50,    # TomTom target
-    3.00,    # KPN target
-    20.00    # Fugro target
+    52.00,   # Aperam target
+    17.50,   # Signify target
+    25.50,   # Philips target
+    0.98,    # PostNL target
+    4.30,    # TomTom target
+    4.00,    # KPN target
+    10.00    # Fugro target
 ]
 
 
@@ -93,8 +93,8 @@ def main():
         # percentage difference from target
         diff_percent = (diff / target) * 100
 
-        # only send if within ±5%
-        if -15 <= diff_percent <= 15:
+        # if current price is within 1% of target → send alert
+        if abs(diff_percent) <= 1:
             message = (
                 f"🔹 {ticker}\n"
                 f"Current: €{current:.2f}\n"
@@ -107,8 +107,14 @@ def main():
             print(message)
             send_telegram(message)
 
-            # wait between messages
-            time.sleep(15)
+        else:
+            # send simple message to confirm Telegram is working
+            test_msg = f"{ticker}: No notification — just checking if msg is working"
+            print(test_msg)
+            send_telegram(test_msg)
+
+        # wait between messages
+        time.sleep(15)
 
 
 
