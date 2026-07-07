@@ -78,50 +78,34 @@ def send_telegram(message):
 # MAIN LOGIC
 # -----------------------------
 def main():
-    # send notification about run time
-    now = time.strftime("%Y-%m-%d %H:%M:%S")
-    send_telegram(f"⏰ Notification at {now}")
-    print(f"⏰ Notification at {now}")
-    
+    # CET timestamp
+    now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    send_telegram(f"⏰ Stock Check — {now} CET")
+
+    any_alert = False
+
     for ticker in TICKERS:
         info = get_price_data(ticker)
-
         if info is None:
-            continue  # skip tickers with no data
+            continue
 
         current = info["price"]
-        previous = info["previous_close"]
-        change = info["change"]
         target = TARGET_PRICES[TICKERS.index(ticker)]
-        diff = current - target
+        diff_percent = ((current - target) / target) * 100
 
-        # percentage difference from target
-        diff_percent = (diff / target) * 100
-
-        # if current price is within 1% of target → send alert
         if abs(diff_percent) <= 1:
+            any_alert = True
             message = (
                 f"🔹 {ticker}\n"
                 f"Current: €{current:.2f}\n"
-                f"Target: €{target:.2f}\n"
-                f"Diff: {diff:.2f} ({diff_percent:.2f}%)\n"
-                f"Prev Close: €{previous:.2f}\n"
-                f"Change: {change:.2f}\n"
+                f"Target: €{target:.2f}"
             )
-
-            print(message)
             send_telegram(message)
 
-        else:
-            # send simple message to confirm Telegram is working
-            test_msg = f"{ticker}: No notification — just checking if msg is working"
-            print(test_msg)
-            send_telegram(test_msg)
+        time.sleep(13)
 
-        # wait between messages
-        time.sleep(15)
-
-
+    if not any_alert:
+        send_telegram(f"ℹ️ No alert — all tickers outside 1% range ({now} CET)")
 
 if __name__ == "__main__":
     main()
