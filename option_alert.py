@@ -78,6 +78,11 @@ def send_telegram(message):
 # MAIN LOGIC
 # -----------------------------
 def main():
+    # send notification about run time
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+    send_telegram(f"⏰ Notification at {now}")
+    print(f"⏰ Notification at {now}")
+    
     for ticker in TICKERS:
         info = get_price_data(ticker)
 
