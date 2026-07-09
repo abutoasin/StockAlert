@@ -2,7 +2,10 @@ name: Hourly Stock Alerts
 
 on:
   schedule:
-    - cron: "*/15 7-17 * * 1-5"
+    - cron: "5 9 * * 1-5"
+    - cron: "5 11 * * 1-5"
+    - cron: "0 14 * * 1-5"
+    - cron: "35 15 * * 1-5"
   workflow_dispatch:
 
 jobs:
