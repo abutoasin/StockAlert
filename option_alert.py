@@ -93,7 +93,7 @@ def main():
         target = TARGET_PRICES[TICKERS.index(ticker)]
         diff_percent = ((current - target) / target) * 100
 
-        if abs(diff_percent) <= 1:
+        if abs(diff_percent) <= 4:
             any_alert = True
             message = (
                 f"🔹 {ticker}\n"
